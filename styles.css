@@ -1,10 +1,15 @@
 #gridContainer {
     display: flex;
-    width: 100px;
-    height: 100px;
-
+    flex-wrap: wrap;
+    width: 500px;
+    height: 500px;
+    border-style: solid;
+    border-width: 1px;
 }
 
 .square-style {
-
+    width: 10;
+    height: 10;
+    border-style: solid;
+    border-width: 1px;
 }
