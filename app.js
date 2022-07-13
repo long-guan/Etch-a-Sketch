@@ -4,7 +4,27 @@ const gridContainer = document.querySelector("#gridContainer");
 let previousGridSize = 0;
 const squareStyle = document.querySelector("#square-style");
 let mouseDown = false;
+const backgroundColor = document.querySelector("#background-color");
+const rainbowMode = document.querySelector("#rainbow");
+let plurMode = false;
+const gradient = document.querySelector("#gradient");
+let gradientMode = false;
 
+rainbowMode.addEventListener('click', function() {
+    if (plurMode == false) {
+        plurMode = true;
+    } else {
+        plurMode = false;
+    }
+})
+
+gradient.addEventListener('click', function() {
+    if (gradientMode == false) {
+        gradientMode = true;
+    } else {
+        gradientMode = false;
+    }
+})
 
 // initializes the grid
 createGrid(gridSize.value);
@@ -46,19 +66,35 @@ function deleteGrid(gridContainer) {
     }
 }
 
+function createRandColor() {
+    return "rgb" + "(" + Math.round(Math.random()*1000) + ", " + Math.round(Math.random()*1000) + ", " + Math.round(Math.random()*1000) + ")";
+}
+
+function chooseColorMode() {
+    if (plurMode == true) {
+        return createRandColor();
+    } else {
+        return backgroundColor.value;
+    }
+}
+
 function addEventListener(square) {
     square.addEventListener('mousedown', function() {
-        // square.style.backgroundColor = "black";
+        square.style.backgroundColor = chooseColorMode();
         mouseDown = true;
-    })
+    }, {once: true})
     square.addEventListener('mouseup', function() {
         mouseDown = false;
     })
     square.addEventListener('mouseenter', function() {
         if (mouseDown == true) {
-            square.style.backgroundColor = "black";
+            square.style.backgroundColor = chooseColorMode();
         }
-    })
+    }, {once: true})
+}
+
+function increaseOpacity() {
+
 }
 
 gridSize.addEventListener("change", function() {
