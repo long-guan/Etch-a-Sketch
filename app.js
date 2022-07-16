@@ -25,6 +25,7 @@ rainbowMode.addEventListener('click', function() {
 gradient.addEventListener('click', function() {
     if (gradientMode == false) {
         gradientMode = true;
+        addEventlistToGradientMode();
         console.log("gradientMode is true")
     } else {
         gradientMode = false;
@@ -83,6 +84,7 @@ function chooseColorMode(square) {
         return createRandColor();
     } else if (gradientMode == true) {
         increaseOpacity(square);
+        console.log('increaseOpacity');
         return backgroundColor.value;
     } else {
         return backgroundColor.value;
@@ -95,6 +97,7 @@ function addEventListener(square) {
         console.log("gradient")
         square.addEventListener('mousedown', function() {
             square.style.backgroundColor = chooseColorMode(square);
+            console.log("gradient");
             mouseDown = true;
         })
         square.addEventListener('mouseup', function() {
@@ -108,6 +111,7 @@ function addEventListener(square) {
     } else { // rainbow mode and normal mode
         console.log("non gradient");
         square.addEventListener('mousedown', function() {
+            console.log("non gradient");
             square.style.backgroundColor = chooseColorMode(square);
             mouseDown = true;
         }, {once: true})
@@ -125,10 +129,21 @@ function addEventListener(square) {
 // adds 0.1 to the div's opacity
 function increaseOpacity(square) {
     if (square.style.opacity == "") {
-        console.log("test");
+        console.log("set opacity to 0.1");
         square.style.opacity = 0.1;
     } else {
-        square.style.opacity += 0.1;
+        console.log(square.style.opacity);
+        square.style.opacity = parseFloat(square.style.opacity) + 0.1;
+        console.log('increase opacity by 0.1');
+    }
+}
+
+// function that checks if the div has opacity, if it does, it'll add eventlisteners to the div if gradient mode is true
+function addEventlistToGradientMode() {
+    let squareList = document.querySelectorAll(".square-style");
+    for (let i = 0; i < squareList.length; i++) {
+        let item = squareList[i]
+        addEventListener(item);
     }
 }
 
