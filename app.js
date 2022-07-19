@@ -81,48 +81,41 @@ function createRandColor() {
 // returns what color the background of the div (square) will be
 function chooseColorMode(square) {
     if (plurMode == true) {
+        console.log("rainbow mode");
         return createRandColor();
     } else if (gradientMode == true) {
         increaseOpacity(square);
         console.log('increaseOpacity');
         return backgroundColor.value;
     } else {
+        console.log("default mode");
         return backgroundColor.value;
     }
 }
 
+// mousedown => increase opacity by 0.1
+function paint1ClickGrad() {
+    this.style.backgroundColor = chooseColorMode(this);
+    mouseDown = true;
+}
 
-function addEventListener(square) {
-    if (gradientMode == true) {
-        console.log("gradient")
-        square.addEventListener('mousedown', function() {
-            square.style.backgroundColor = chooseColorMode(square);
-            console.log("gradient");
-            mouseDown = true;
-        })
-        square.addEventListener('mouseup', function() {
-            mouseDown = false;
-        })
-        square.addEventListener('mouseenter', function() {
-            if (mouseDown == true) {
-                square.style.backgroundColor = chooseColorMode(square);
-            }
-        })
-    } else { // rainbow mode and normal mode
-        console.log("non gradient");
-        square.addEventListener('mousedown', function() {
-            console.log("non gradient");
-            square.style.backgroundColor = chooseColorMode(square);
-            mouseDown = true;
-        }, {once: true})
-        square.addEventListener('mouseup', function() {
-            mouseDown = false;
-        })
-        square.addEventListener('mouseenter', function() {
-            if (mouseDown == true) {
-                square.style.backgroundColor = chooseColorMode(square);
-            }
-        }, {once: true})
+// mousedown around divs => increase opacity by 0.1
+function paintMouseDownGrad() {
+    if (mouseDown == true) {
+        this.style.backgroundColor = chooseColorMode(this);
+    }
+}
+
+// for default or rainbow mode
+function paint1ClickDefault() {
+    this.style.backgroundColor = chooseColorMode(this);
+    mouseDown = true;
+}
+
+// for default or rainbow mode
+function paintMouseDownDefault() {
+    if (mouseDown == true) {
+        this.style.backgroundColor = chooseColorMode(this);
     }
 }
 
@@ -135,15 +128,46 @@ function increaseOpacity(square) {
         console.log(square.style.opacity);
         square.style.opacity = parseFloat(square.style.opacity) + 0.1;
         console.log('increase opacity by 0.1');
+        if (square.style.opacity == 1) {
+            square.removeEventListener('mousedown', paint1ClickGrad);
+            square.removeEventListener('mouseenter', paintMouseDownGrad);
+        }
     }
 }
 
-// function that checks if the div has opacity, if it does, it'll add eventlisteners to the div if gradient mode is true
+function addEventListener(square) {
+    if (gradientMode == true) {
+        console.log("gradient")
+        square.addEventListener('mousedown', paint1ClickGrad)
+        square.addEventListener('mouseup', function() {
+            mouseDown = false;
+        })
+        square.addEventListener('mouseenter', paintMouseDownGrad)
+    } else { // rainbow mode and normal mode
+        console.log("non gradient");
+        square.addEventListener('mousedown', paint1ClickDefault, {once: true})
+        square.addEventListener('mouseup', function() {
+            mouseDown = false;
+        })
+        square.addEventListener('mouseenter', paintMouseDownDefault, {once: true})
+    }
+}
+
+// removes eventlistener for divs that didn't have its eventlistener triggered
+function removeEventListGrad(square) {
+    if (square.style.opacity == "") {
+        square.removeEventListener('mousedown', paint1ClickDefault);
+        square.removeEventListener('mouseenter', paintMouseDownDefault);
+    }
+}
+
+// when switching between default mode and gradient mode, check each div to see if the default eventlistener was activated, if not remove the one-occurence event and add the gradient mode event to the div
 function addEventlistToGradientMode() {
     let squareList = document.querySelectorAll(".square-style");
     for (let i = 0; i < squareList.length; i++) {
-        let item = squareList[i]
-        addEventListener(item);
+        let square = squareList[i]
+        removeEventListGrad(square);
+        addEventListener(square);
     }
 }
 
