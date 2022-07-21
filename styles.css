@@ -16,6 +16,15 @@
     background-color: gray;
 }
 
-#rainbow:hover {
-    background-color: gray;
+button:hover {
+    cursor: pointer;
+    background-color: rgb(157, 155, 155);
+}
+
+input:hover {
+    cursor: pointer;
+}
+
+#background-color:hover {
+    background-color: rgb(157, 155, 155);
 }
